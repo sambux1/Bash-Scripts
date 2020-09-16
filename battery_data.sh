@@ -2,6 +2,12 @@
 
 # aliased to 'battery'
 
+# example output:
+#
+# Power consumption: 34 W
+# Energy remaining: 18 Wh (28%)
+
+
 # get the current power consumption in Watts
 power=$(cat /sys/class/power_supply/BAT0/power_now)
 power_w=$(($power / 1000000))
