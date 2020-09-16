@@ -23,4 +23,3 @@ percentage=$(($energy * 100 / $capacity))
 echo Power consumption: $power_w W
 echo "Energy remaining: $energy_wh Wh (${percentage}%)"
 
-
