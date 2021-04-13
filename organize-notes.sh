@@ -3,6 +3,8 @@
 input_directory=/home/sam/notes
 output_directory=/home/sam/notes-pdf
 
+date_file=/home/sam/.notes_date_file.txt
+
 # recursive function to convert all markdown files to pdf
 # and recurse on all sub directories
 convert_folder() {
@@ -18,8 +20,15 @@ convert_folder() {
     # convert and move all markdown files
     for file in *.md ; do
         if [ $file != "*.md" ] ; then
-            pdf_file="${file%".md"}.pdf"
-            pandoc $file -o "${output_path}/${pdf_file}"
+            # if file was modified since last update
+            if [ "$file" -nt "$date_file" ]; then
+                # get file destination and make pdf
+                pdf_file="${file%".md"}.pdf"
+                # delete previous version
+                rm "${output_path}/${pdf_file}" || true     # the or true just avoids errors if the file does not exist
+                pandoc $file -o "${output_path}/${pdf_file}"
+                echo "Creating $pdf_file"
+            fi
         fi
     done
 
@@ -33,8 +42,8 @@ convert_folder() {
     done
 }
 
-# deletes folder so it can be regenerated
-rm -r $output_directory
-
 cd $input_directory
 convert_folder
+
+# update the last saved date
+echo "hey" > $date_file
